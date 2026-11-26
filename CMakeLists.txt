@@ -3,6 +3,8 @@ project(emulator)
 
 add_executable(emulator)
 
+add_subdirectory(src)
+
 target_sources(emulator
     PRIVATE
         main.cpp
