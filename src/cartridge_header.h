@@ -1,8 +1,9 @@
 #pragma once
+#include <cstdint>
 #include <map>
 #include <string>
 
-std::map<char, std::string> cartridge_types = {
+std::map<uint8_t, std::string> cartridge_types = {
     {0x00, "ROM_ONLY"},
     {0x01, "MBC1"},
     {0x02, "MBC1+RAM"},
@@ -16,7 +17,7 @@ std::map<char, std::string> cartridge_types = {
     {0X0D, "MMM01+RAM+BATTERY"}
 };
 
-std::map<char, u_int16_t> ram_sizes = {
+std::map<uint8_t, uint16_t> ram_sizes = {
     {0x00, 0},
     {0x02, 8},
     {0x03, 32},

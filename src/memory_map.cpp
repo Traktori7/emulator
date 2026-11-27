@@ -10,6 +10,7 @@
 #define ROM_BANK_00_SIZE 0x4000
 
 char rom_bank_00[ROM_BANK_00_SIZE];
+uint16_t current_address = 0x0100;
 
 void load_rom_to_memory(std::string& rom_name)
 {
@@ -28,8 +29,21 @@ void print_header()
     memcpy(title, rom_bank_00 + 0x0134, 16);
     std::cout << "ROM title: " << title << std::endl;
 
-    std::cout << "Cartridge type: " << cartridge_types[rom_bank_00[0x0147]] << std::endl;
-    std::cout << "ROM size: " << 32 * (1 << rom_bank_00[0x0148]) << std::endl;
-    std::cout << "RAM size: " << ram_sizes[rom_bank_00[0x0149]] << std::endl;
+    std::cout << "Cartridge type: " << cartridge_types[(uint8_t)rom_bank_00[0x0147]] << std::endl;
+    std::cout << "ROM size: " << 32 * (1 << (uint8_t)rom_bank_00[0x0148]) << std::endl;
+    std::cout << "RAM size: " << ram_sizes[(uint8_t)rom_bank_00[0x0149]] << std::endl;
     
+}
+
+uint8_t read_next_instruction()
+{
+    uint8_t instruction = (uint8_t)rom_bank_00[current_address];
+    current_address++;
+    return instruction;
+}
+
+uint8_t read_next_instruction(uint16_t address)
+{
+    current_address = address;
+    return read_next_instruction();
 }

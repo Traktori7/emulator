@@ -3,4 +3,6 @@ project(emulator)
 
 add_executable(emulator)
 
+set_property(TARGET emulator PROPERTY CXX_STANDARD 20)
+
 add_subdirectory(src)
