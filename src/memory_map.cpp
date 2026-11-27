@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "cartridge_header.h"
+
 
 #define ROM_BANK_00_SIZE 0x4000
 
@@ -26,39 +28,8 @@ void print_header()
     memcpy(title, rom_bank_00 + 0x0134, 16);
     std::cout << "ROM title: " << title << std::endl;
 
+    std::cout << "Cartridge type: " << cartridge_types[rom_bank_00[0x0147]] << std::endl;
     std::cout << "ROM size: " << 32 * (1 << rom_bank_00[0x0148]) << std::endl;
-
-    char ram_size = rom_bank_00[0x0149];
-    if (ram_size == 0x00)
-    {
-        ram_size = 0;
-    }
-    else if (ram_size == 0x01)
-    {
-        ram_size = 2;
-        std::cout << "ERROR: Unexpected RAM size of 0x01" << std::endl;
-    }
-    else if (ram_size == 0x02)
-    {
-        ram_size = 8;
-    }
-    else if (ram_size == 0x03)
-    {
-        ram_size = 32;
-    }
-    else if (ram_size == 0x04)
-    {
-        ram_size = 128;
-    }
-    else if (ram_size == 0x05)
-    {
-        ram_size = 64;
-    }
-    else
-    {
-        std::cout << "ERROR: Invalid RAM size " << std::hex << ram_size << std::endl;
-    }
-
-    std::cout << "RAM size: " << (u_int16_t)ram_size << std::endl;
+    std::cout << "RAM size: " << ram_sizes[rom_bank_00[0x0149]] << std::endl;
     
 }
