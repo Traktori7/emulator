@@ -1,4 +1,6 @@
 #pragma once
 #include <string>
 
-void load_rom(std::string& rom_name);
+
+bool core_init(std::string& rom_name, bool debug = false);
+bool core_run();

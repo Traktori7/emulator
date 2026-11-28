@@ -47,8 +47,10 @@ int main(int argc, char* argv[])
 
     if (arguments.rom_name != "")
     {
-        load_rom(arguments.rom_name);
+        core_init(arguments.rom_name, arguments.debug);
     }
+
+    core_run();
 
     return 0;
 }

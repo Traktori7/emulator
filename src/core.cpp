@@ -6,15 +6,20 @@
 #include "memory_map.h"
 
 
-void load_rom(std::string& rom_name)
+bool core_init(std::string& rom_name, bool debug)
 {
+    cpu_init(debug);
     load_rom_to_memory(rom_name);
     print_header();
+    return true;
+}
 
-    for (size_t i = 0; i < 10; i++)
+bool core_run()
+{
+    while (cpu_execute())
     {
-        uint8_t instruction = read_next_instruction();
-        parse_instruction(instruction);
+        continue;
     }
-    
+
+    return false;
 }

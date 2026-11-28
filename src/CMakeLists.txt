@@ -4,4 +4,6 @@ target_sources(emulator
         core.cpp
         memory_map.cpp
         cpu.cpp
+        system_clock.cpp
+        cpu_instructions.cpp
 )
