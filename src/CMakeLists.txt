@@ -6,4 +6,5 @@ target_sources(emulator
         cpu.cpp
         system_clock.cpp
         cpu_instructions.cpp
+        log.cpp
 )

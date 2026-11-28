@@ -2,6 +2,10 @@
 #include <string>
 
 #include "core.h"
+#include "log.h"
+
+
+const std::string log_file_name = "log.txt";
 
 struct args {
     bool debug = false;
@@ -45,7 +49,13 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    if (arguments.rom_name != "")
+    init_log(log_file_name);
+    if (arguments.debug)
+    {
+        set_log_level(log_level::DEBUG);
+    }
+
+    if (!arguments.rom_name.empty())
     {
         core_init(arguments.rom_name, arguments.debug);
     }

@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "cpu.h"
+#include "log.h"
 #include "memory_map.h"
 
 

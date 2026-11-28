@@ -1,9 +1,11 @@
 #include "cpu.h"
 
 #include <cstdint>
+#include <format>
 #include <iostream>
 
 #include "cpu_instructions.h"
+#include "log.h"
 #include "memory_map.h"
 #include "system_clock.h"
 
@@ -25,12 +27,12 @@ bool cpu_execute()
 
     if (debug_mode)
     {
-        std::cout << "OPCODE: " << std::hex << std::showbase << (uint16_t) opcode << " " << instruction.instruction_name << std::endl;
+        log_print(log_level::DEBUG, std::format("OPCODE: {:#04x} {}", (uint16_t)opcode, instruction.instruction_name));
     }
 
     if (!instruction.function)
     {
-        std::cout << "ERROR: Unimplemented opcode: " << std::hex << std::showbase << (uint16_t)opcode << std::endl;
+        log_print(log_level::ERROR, std::format("Unimplemented opcode: {:#04x}", (uint16_t)opcode));
         return false;
     }
 
@@ -57,7 +59,7 @@ uint16_t read_imm16()
 void nop()
 {
     advance_system_clock(4);
-    std::cout << "NOP" << std::endl;
+    log_print(log_level::DEBUG, "NOP");
 }
 
 void ld_r16_imm16(uint16_t& register_value)
@@ -69,25 +71,25 @@ void ld_r16_imm16(uint16_t& register_value)
 void ld_bc_imm16()
 {
     ld_r16_imm16(regs.BC);
-    std::cout << "LD " << std::hex << std::showbase << " to BC" << std::endl;
+    log_print(log_level::DEBUG, std::format("LD {:#06x} to BC", regs.BC));
 }
 
 void ld_de_imm16()
 {
     ld_r16_imm16(regs.DE);
-    std::cout << "LD " << std::hex << std::showbase << " to DE" << std::endl;
+    log_print(log_level::DEBUG, std::format("LD {:#06x} to DE", regs.DE));
 }
 
 void ld_hl_imm16()
 {
     ld_r16_imm16(regs.HL);
-    std::cout << "LD " << std::hex << std::showbase << " to HL" << std::endl;
+    log_print(log_level::DEBUG, std::format("LD {:#06x} to HL", regs.HL));
 }
 
 void ld_sp_imm16()
 {
     ld_r16_imm16(regs.SP);
-    std::cout << "LD " << std::hex << std::showbase << " to SP" << std::endl;
+    log_print(log_level::DEBUG, std::format("LD {:#06x} to SP", regs.SP));
 }
 
 void jp_imm16()
@@ -97,5 +99,5 @@ void jp_imm16()
     uint16_t new_address = read_imm16();
     regs.PC = new_address;
     advance_system_clock(4);
-    std::cout << "JP to " << std::hex << std::showbase << new_address << std::endl;
+    log_print(log_level::DEBUG, std::format("JP to {:#06x}", new_address));
 }
