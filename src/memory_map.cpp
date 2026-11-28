@@ -10,7 +10,7 @@
 #define ROM_BANK_00_SIZE 0x4000
 
 char rom_bank_00[ROM_BANK_00_SIZE];
-uint16_t current_address = 0x0100;
+//uint16_t current_address = 0x0100;
 
 void load_rom_to_memory(std::string& rom_name)
 {
@@ -35,15 +35,17 @@ void print_header()
     
 }
 
-uint8_t read_next_instruction()
+uint8_t read_memory(uint16_t address)
 {
-    uint8_t instruction = (uint8_t)rom_bank_00[current_address];
-    current_address++;
-    return instruction;
+    if (address <= 0x3fff)
+    {
+        return (uint8_t)rom_bank_00[address];
+    }
+
+    return 0;
 }
 
-uint8_t read_next_instruction(uint16_t address)
+void write_memory(uint16_t address, uint8_t value)
 {
-    current_address = address;
-    return read_next_instruction();
+
 }

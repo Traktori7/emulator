@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <format>
-#include <iostream>
 
 #include "cpu_instructions.h"
 #include "log.h"
@@ -17,7 +16,24 @@ cpu_registers regs;
 bool cpu_init(bool debug)
 {
     debug_mode = debug;
+
+    // These registers seem to depend on the device. Difference between DMG0 and DMG?
+    regs.A = 0x01;
+    //regs.F = //TODO
+    regs.BC = 0x0013;
+    regs.DE = 0x00d8;
+    regs.HL = 0x014d;
+    regs.PC = 0x0100;
+    regs.SP = 0xffff;
     return true;
+}
+
+uint8_t read_next_instruction()
+{
+    uint8_t opcode = read_memory(regs.PC);
+    //log_print(log_level::DEBUG, std::format("Read addr {:#06x} val {:#04x}", regs.PC, (uint16_t)opcode));
+    regs.PC++;
+    return opcode;
 }
 
 bool cpu_execute()
