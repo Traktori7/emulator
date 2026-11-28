@@ -7,14 +7,9 @@
 #include "memory_map.h"
 #include "system_clock.h"
 
-bool debug_mode = false;
 
-uint16_t AF_register;
-uint16_t BC_register;
-uint16_t DE_register;
-uint16_t HL_register;
-uint16_t SP_register;
-uint16_t PC_register;
+bool debug_mode = false;
+cpu_registers regs;
 
 
 bool cpu_init(bool debug)
@@ -30,17 +25,33 @@ bool cpu_execute()
 
     if (debug_mode)
     {
-        std::cout << "OPCODE: " << std::hex << (uint16_t) opcode << " " << instruction.instruction_name << std::endl;
+        std::cout << "OPCODE: " << std::hex << std::showbase << (uint16_t) opcode << " " << instruction.instruction_name << std::endl;
     }
 
     if (!instruction.function)
     {
-        std::cout << "ERROR: Unimplemented opcode: " << std::hex << (uint16_t)opcode << std::endl;
+        std::cout << "ERROR: Unimplemented opcode: " << std::hex << std::showbase << (uint16_t)opcode << std::endl;
         return false;
     }
 
     instruction.function();
     return true;
+}
+
+/**
+ * Reads next 2 bytes and combines them in little endien order.
+ * Advances the clock by 3 M-cycles.
+ */
+uint16_t read_imm16()
+{
+    advance_system_clock(4);
+    uint8_t lower = read_next_instruction();
+
+    advance_system_clock(4);
+    uint8_t upper = read_next_instruction();
+
+    advance_system_clock(4);
+    return (upper << 8) | lower;
 }
 
 void nop()
@@ -49,18 +60,42 @@ void nop()
     std::cout << "NOP" << std::endl;
 }
 
+void ld_r16_imm16(uint16_t& register_value)
+{
+    register_value = read_imm16();
+    advance_system_clock(4);
+}
+
+void ld_bc_imm16()
+{
+    ld_r16_imm16(regs.BC);
+    std::cout << "LD " << std::hex << std::showbase << " to BC" << std::endl;
+}
+
+void ld_de_imm16()
+{
+    ld_r16_imm16(regs.DE);
+    std::cout << "LD " << std::hex << std::showbase << " to DE" << std::endl;
+}
+
+void ld_hl_imm16()
+{
+    ld_r16_imm16(regs.HL);
+    std::cout << "LD " << std::hex << std::showbase << " to HL" << std::endl;
+}
+
+void ld_sp_imm16()
+{
+    ld_r16_imm16(regs.SP);
+    std::cout << "LD " << std::hex << std::showbase << " to SP" << std::endl;
+}
+
 void jp_imm16()
 {
-    advance_system_clock(4);
-    uint8_t upper = read_next_instruction();
-
-    advance_system_clock(4);
-    uint8_t lower = read_next_instruction();
-
     // TODO: Where does the 4th M-cycle happen?
     advance_system_clock(4);
+    uint16_t new_address = read_imm16();
+    regs.PC = new_address;
     advance_system_clock(4);
-    uint16_t new_address = (upper << 8) | lower;
-    PC_register = new_address;
-    std::cout << "JP to " << std::hex << new_address << std::endl;
+    std::cout << "JP to " << std::hex << std::showbase << new_address << std::endl;
 }

@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+// TODO: Rest of the types
 std::map<uint8_t, std::string> cartridge_types = {
     {0x00, "ROM_ONLY"},
     {0x01, "MBC1"},
